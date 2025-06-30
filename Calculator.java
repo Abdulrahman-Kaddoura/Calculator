@@ -44,7 +44,8 @@ public class Calculator {
 
         JPanel topCol = new JPanel();
         topCol.setPreferredSize(new Dimension(325, 50));
-        topCol.setBackground(new Color(34, 34, 34));
+        // topCol.setBackground(new Color(34, 34, 34));
+        topCol.setBackground(Color.white);
 
         JPanel textArea = new JPanel();
         textArea.setPreferredSize(new Dimension(325, 100));
@@ -58,13 +59,17 @@ public class Calculator {
         text.setText("0");
         text.setFocusable(false);
         text.setForeground(Color.WHITE);
-        text.setMargin(new Insets(10, 0, 0, 10));
+        text.setMargin(new Insets(9, 0, 0, 10));
         text.setFont(new Font("Arial", Font.BOLD, 50));
 
         history = new JTextArea();
         history.setPreferredSize(new Dimension(300, 25));
-        history.setFocusable(false);
+        history.setFocusable(true);
         history.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        history.setMargin(new Insets(10, 0, 0, 10));
+        history.setFont(new Font("Arial", 0, 15));
+        history.setForeground(Color.lightGray);
+        history.setBackground(new Color(34, 34, 34));
 
         textArea.add(history);
         textArea.add(text);
@@ -181,16 +186,26 @@ public class Calculator {
             this.calc = calc;
         }
 
+        private void clearText() {
+            text.setText("0");
+        }
+
+        private void clearHistory() {
+            history.setText("");
+        }
+
         @Override
         public void actionPerformed(ActionEvent e) {
             String cmd = e.getActionCommand();
+            JTextArea text = calc.text;
+            JTextArea history = calc.history;
 
             switch (cmd) {
                 case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" -> {
-                    if (calc.text.getText().equals("0")) {
-                        calc.text.setText(cmd);
+                    if (text.getText().equals("0")) {
+                        text.setText(cmd);
                     } else {
-                        calc.text.setText(calc.text.getText() + cmd);
+                        text.setText(text.getText() + cmd);
                     }
                 }
                 case "+" -> {
@@ -205,11 +220,18 @@ public class Calculator {
                 // case "=":
                 // case ".":
                 case "C" -> {
-                    calc.text.setText("0");
+                    text.setText("0");
+                    clearHistory();
                 }
-                // case "+/-":
-                // case "DEL":
-                    // break;
+                // case "+/-" -> {}
+                case "DEL" -> {
+                    if (text.getText().length() == 1) {
+                        clearText();
+                    }
+                    if ((!text.getText().equals("0"))) {
+                        text.setText(text.getText().substring(0, text.getText().length()- 1));    
+                    }
+                }            
             }
         }
     }
