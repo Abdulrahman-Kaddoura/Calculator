@@ -1,8 +1,12 @@
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.border.Border;
 
 public class Calculator {
+
+    private JTextArea text;
+    private JTextArea history;
+
     public int add(int x, int y) {
         return x + y;
     }
@@ -23,7 +27,7 @@ public class Calculator {
         return x % y;
     }
 
-    public static void main(String[] args) {
+    public Calculator() {
         JFrame frame = new JFrame("Calculator");
 
         Image icon = Toolkit.getDefaultToolkit().getImage("Icon.png");
@@ -37,27 +41,27 @@ public class Calculator {
         frame.setResizable(false);
 
         // frame.setUndecorated(true);
-        
-
-        Border border = BorderFactory.createLineBorder(Color.BLACK, 2);
 
         JPanel topCol = new JPanel();
         topCol.setPreferredSize(new Dimension(325, 50));
-        topCol.setBackground(Color.blue);
-        topCol.setBorder(border);
+        topCol.setBackground(new Color(34, 34, 34));
 
         JPanel textArea = new JPanel();
         textArea.setPreferredSize(new Dimension(325, 100));
         textArea.setLayout(new BoxLayout(textArea, BoxLayout.Y_AXIS));
-        textArea.setBackground(Color.blue);
-        textArea.setBorder(border);
+        textArea.setBackground(new Color(34, 34, 34));
 
-        JTextArea text = new JTextArea();
-        text.setBackground(Color.red);
+        text = new JTextArea();
+        text.setBackground(new Color(34, 34, 34));
         text.setPreferredSize(new Dimension(300, 75));
         text.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        text.setText("0");
+        text.setFocusable(false);
+        text.setForeground(Color.WHITE);
+        text.setMargin(new Insets(10, 0, 0, 10));
+        text.setFont(new Font("Arial", Font.BOLD, 50));
 
-        JTextArea history = new JTextArea();
+        history = new JTextArea();
         history.setPreferredSize(new Dimension(300, 25));
         history.setFocusable(false);
         history.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
@@ -67,7 +71,7 @@ public class Calculator {
 
         JPanel buttons = new JPanel();
         buttons.setPreferredSize(new Dimension(325, 325));
-        buttons.setBorder(border);
+        // buttons.setBorder(border);
         buttons.setBackground(new Color(34, 34, 34));
 
         RoundedButton b1 = new RoundedButton("1", 10);
@@ -124,6 +128,29 @@ public class Calculator {
         buttons.add(Decimal);
         buttons.add(Equals);
 
+        b0.addActionListener(new ButtonHandler(this));
+        b1.addActionListener(new ButtonHandler(this));
+        b2.addActionListener(new ButtonHandler(this));
+        b3.addActionListener(new ButtonHandler(this));
+        b4.addActionListener(new ButtonHandler(this));
+        b5.addActionListener(new ButtonHandler(this));
+        b6.addActionListener(new ButtonHandler(this));
+        b7.addActionListener(new ButtonHandler(this));
+        b8.addActionListener(new ButtonHandler(this));
+        b9.addActionListener(new ButtonHandler(this));
+        Add.addActionListener(new ButtonHandler(this));
+        Subtract.addActionListener(new ButtonHandler(this));
+        Multiply.addActionListener(new ButtonHandler(this));
+        Divide.addActionListener(new ButtonHandler(this));
+        Mod.addActionListener(new ButtonHandler(this));
+        Square.addActionListener(new ButtonHandler(this));
+        Root.addActionListener(new ButtonHandler(this));
+        Equals.addActionListener(new ButtonHandler(this));
+        Decimal.addActionListener(new ButtonHandler(this));
+        Clear.addActionListener(new ButtonHandler(this));
+        ToggleSign.addActionListener(new ButtonHandler(this));
+        Del.addActionListener(new ButtonHandler(this));
+
         for (Component c : buttons.getComponents()) {
             if (c instanceof RoundedButton) {
                 RoundedButton btn = (RoundedButton) c;
@@ -145,5 +172,49 @@ public class Calculator {
         frame.add(textArea, BorderLayout.CENTER);
         frame.add(buttons, BorderLayout.SOUTH);
         frame.setVisible(true);
+    }
+
+    private class ButtonHandler implements ActionListener {
+        private Calculator calc;
+
+        public ButtonHandler(Calculator calc) {
+            this.calc = calc;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String cmd = e.getActionCommand();
+
+            switch (cmd) {
+                case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" -> {
+                    if (calc.text.getText().equals("0")) {
+                        calc.text.setText(cmd);
+                    } else {
+                        calc.text.setText(calc.text.getText() + cmd);
+                    }
+                }
+                case "+" -> {
+                    
+                }
+                // case "-":
+                // case "x":
+                // case "÷":
+                // case "%":
+                // case "x²":
+                // case "√":
+                // case "=":
+                // case ".":
+                case "C" -> {
+                    calc.text.setText("0");
+                }
+                // case "+/-":
+                // case "DEL":
+                    // break;
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        new Calculator();
     }
 }
