@@ -180,15 +180,16 @@ public class Calculator {
     }
 
     private boolean pressedOperator = false;
-    private int num1;
-    private int num2;
-    private int answer;
+    private double num1;
+    private double num2;
+    private double answer;
     private boolean adding;
     private boolean subtracting;
     private boolean multiplying;
     private boolean dividing;
     private boolean modding;
     private boolean squaring;
+    private boolean rooting;
 
     private class ButtonHandler implements ActionListener {
         private Calculator calc;
@@ -212,6 +213,7 @@ public class Calculator {
             dividing = false;
             modding = false;
             squaring = false;
+            rooting = false;
         }
 
         @Override
@@ -235,7 +237,7 @@ public class Calculator {
                 case "+" -> {
                     resetOperators();
                     String num1Str = text.getText();
-                    num1 = Integer.valueOf(num1Str);
+                    num1 = Double.valueOf(num1Str);
                     history.setText(" + " + num1Str);
                     pressedOperator = true;
                     adding = true;
@@ -243,7 +245,7 @@ public class Calculator {
                 case "-" -> {
                     resetOperators();
                     String num1Str = text.getText();
-                    num1 = Integer.valueOf(num1Str);
+                    num1 = Double.valueOf(num1Str);
                     history.setText(" - " + num1Str);
                     pressedOperator = true;
                     subtracting = true;
@@ -251,7 +253,7 @@ public class Calculator {
                 case "×" -> {
                     resetOperators();
                     String num1Str = text.getText();
-                    num1 = Integer.valueOf(num1Str);
+                    num1 = Double.valueOf(num1Str);
                     history.setText(" × " + num1Str);
                     pressedOperator = true;
                     multiplying = true;
@@ -259,7 +261,7 @@ public class Calculator {
                 case "÷" -> {
                     resetOperators();
                     String num1Str = text.getText();
-                    num1 = Integer.valueOf(num1Str);
+                    num1 = Double.valueOf(num1Str);
                     history.setText(" ÷ " + num1Str);
                     pressedOperator = true;
                     dividing = true;
@@ -267,17 +269,17 @@ public class Calculator {
                 case "%" -> {
                     resetOperators();
                     String num1Str = text.getText();
-                    num1 = Integer.valueOf(num1Str);
+                    num1 = Double.valueOf(num1Str);
                     history.setText(" % " + num1Str);
                     pressedOperator = true;
                     modding = true;
                 }
                 case "x²" -> {
                     String num1Str = text.getText();
-                    num1 = Integer.valueOf(num1Str);
+                    num1 = Double.valueOf(num1Str);
                     history.setText(String.format("sqr(%s)", num1Str));
                     try {
-                        Math.multiplyExact(num1, num1);
+                        double result = Math.pow(19999999, 2);
                     } catch (ArithmeticException omg) {
                         text.setText("Lol");
                         return;
@@ -287,7 +289,21 @@ public class Calculator {
                     pressedOperator = true;
                     modding = true;
                 }
-                // case "√":
+                case "√" -> {
+                    String num1Str = text.getText();
+                    num1 = Integer.valueOf(num1Str);
+                    history.setText(String.format("root(%s)", num1Str));
+                    try {
+                        Math.sqrt(num1);
+                    } catch (ArithmeticException omg) {
+                        text.setText("Lol");
+                        return;
+                    }
+                    answer = Math.sqrt(Double.valueOf(num1));
+                    text.setText(String.valueOf(answer));
+                    pressedOperator = true;
+                    rooting = true;
+                }
                 case "=" -> {
                     String num2Str = text.getText();
                     num2 = Integer.valueOf(num2Str);
