@@ -4,8 +4,8 @@ import javax.swing.*;
 
 public class Calculator {
 
-    private JTextArea text;
-    private JTextArea history;
+    private final JTextArea text;
+    private final JTextArea history;
 
     public int add(int x, int y) {
         return x + y;
