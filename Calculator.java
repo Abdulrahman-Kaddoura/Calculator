@@ -55,7 +55,7 @@ public class Calculator {
         text = new JTextArea();
         text.setBackground(new Color(34, 34, 34));
         text.setPreferredSize(new Dimension(300, 75));
-        text.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        // text.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         text.setText("0");
         text.setFocusable(false);
         text.setForeground(Color.WHITE);
@@ -65,7 +65,7 @@ public class Calculator {
         history = new JTextArea();
         history.setPreferredSize(new Dimension(300, 25));
         history.setFocusable(true);
-        history.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        // history.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         history.setMargin(new Insets(10, 0, 0, 10));
         history.setFont(new Font("Arial", 0, 15));
         history.setForeground(Color.lightGray);
@@ -198,10 +198,6 @@ public class Calculator {
             this.calc = calc;
         }
 
-        private void resetFontSize() {
-            text.setFont(new Font("Arial", Font.BOLD, 50));
-        }
-
         private void clearText() {
             text.setText("0");
         }
@@ -225,9 +221,11 @@ public class Calculator {
         }
 
         private void setAnswerInt(double x) {
-            answerI = (int)x;
-            checkLength(x);
-            text.setText(String.valueOf(answerI));
+            answerI = (int) x;
+            checkLength(answerI);
+            if (answerI < 0) {
+                text.setText(String.valueOf(answerI));
+            }
         }
 
         private void setAnswerDouble(double x) {
@@ -237,24 +235,32 @@ public class Calculator {
 
         private void checkLength(Object x) {
             if (x instanceof Double) {
-                String l = String.valueOf((Double)x);
+                String l = String.valueOf((Double) x);
                 if (l.length() <= 9) {
                     return;
-                } else if (l.length() <= 14) {
-                    changeFontSize(35);
+                } else if (l.length() >= 14) {
+                    System.out.println("im here");
+                    changeFontSize(30);
                 }
             } else {
-                String l = String.valueOf((Integer)x);
+                System.out.println("Int");
+                String l = String.valueOf((Integer) x);
                 if (l.length() <= 9) {
                     return;
-                } else if (l.length() <= 14) {
-                    changeFontSize(35);
+                } else if (l.length() >= 14) {
+                    changeFontSize(30);
                 }
             }
         }
 
         private void changeFontSize(int x) {
             text.setFont(new Font("Arial", Font.BOLD, x));
+            text.setMargin(new Insets(20, 0, 0, 10));
+        }
+
+        private void resetFontSize() {
+            text.setFont(new Font("Arial", Font.BOLD, 50));
+            text.setMargin(new Insets(9, 0, 0, 10));
         }
 
         @Override
@@ -373,18 +379,15 @@ public class Calculator {
                             return;
                         }
                         answerD = num1 / num2;
-                        System.out.println(answerD);
                         dividing = false;
                     } else if (modding) {
                         answerD = num1 % num2;
                         modding = false;
                     }
                     if (!checkDouble(answerD)) {
-                        System.out.println("yoyo");
                         setAnswerInt(answerD);
                     } else {
                         setAnswerDouble(answerD);
-                        System.out.println("nono");
                     }
                     history.setText(" = " + num2Str + " " + history.getText());
                 }
