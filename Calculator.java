@@ -198,6 +198,10 @@ public class Calculator {
             this.calc = calc;
         }
 
+        private void resetFontSize() {
+            text.setFont(new Font("Arial", Font.BOLD, 50));
+        }
+
         private void clearText() {
             text.setText("0");
         }
@@ -218,6 +222,39 @@ public class Calculator {
 
         private boolean checkDouble(double x) {
             return Math.round(x) != x;
+        }
+
+        private void setAnswerInt(double x) {
+            answerI = (int)x;
+            checkLength(x);
+            text.setText(String.valueOf(answerI));
+        }
+
+        private void setAnswerDouble(double x) {
+            checkLength(x);
+            text.setText(String.valueOf(x));
+        }
+
+        private void checkLength(Object x) {
+            if (x instanceof Double) {
+                String l = String.valueOf((Double)x);
+                if (l.length() <= 9) {
+                    return;
+                } else if (l.length() <= 14) {
+                    changeFontSize(35);
+                }
+            } else {
+                String l = String.valueOf((Integer)x);
+                if (l.length() <= 9) {
+                    return;
+                } else if (l.length() <= 14) {
+                    changeFontSize(35);
+                }
+            }
+        }
+
+        private void changeFontSize(int x) {
+            text.setFont(new Font("Arial", Font.BOLD, x));
         }
 
         @Override
@@ -290,10 +327,9 @@ public class Calculator {
                     }
                     answerD = num1 * num1;
                     if (!checkDouble(answerD)) {
-                        answerI = (int)answerD;
-                        text.setText(String.valueOf(answerI));
+                        setAnswerInt(answerD);
                     } else {
-                        text.setText(String.valueOf(answerD));
+                        setAnswerDouble(answerD);
                     }
                     pressedOperator = true;
                     modding = true;
@@ -310,10 +346,9 @@ public class Calculator {
                     }
                     answerD = Math.sqrt(num1);
                     if (!checkDouble(answerD)) {
-                        answerI = (int)answerD;
-                        text.setText(String.valueOf(answerI));
+                        setAnswerInt(answerD);
                     } else {
-                        text.setText(String.valueOf(answerD));
+                        setAnswerDouble(answerD);
                     }
                     pressedOperator = true;
                     rooting = true;
@@ -332,20 +367,24 @@ public class Calculator {
                         multiplying = false;
                     } else if (dividing) {
                         try {
-                            answerD = num1 / num2;
+                            double x = num1 / num2;
                         } catch (Exception problem) {
                             text.setText("Cannot divide by Zero");
+                            return;
                         }
+                        answerD = num1 / num2;
+                        System.out.println(answerD);
                         dividing = false;
                     } else if (modding) {
                         answerD = num1 % num2;
                         modding = false;
                     }
                     if (!checkDouble(answerD)) {
-                        answerI = (int)answerD;
-                        text.setText(String.valueOf(answerI));
+                        System.out.println("yoyo");
+                        setAnswerInt(answerD);
                     } else {
-                        text.setText(String.valueOf(answerD));
+                        setAnswerDouble(answerD);
+                        System.out.println("nono");
                     }
                     history.setText(" = " + num2Str + " " + history.getText());
                 }
@@ -353,6 +392,7 @@ public class Calculator {
                 case "C" -> {
                     text.setText("0");
                     clearHistory();
+                    resetFontSize();
                 }
                 // case "+/-" -> {}
                 case "DEL" -> {
