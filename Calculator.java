@@ -92,7 +92,7 @@ public class Calculator {
 
         RoundedButton Add = new RoundedButton("+", 10);
         RoundedButton Subtract = new RoundedButton("-", 10);
-        RoundedButton Multiply = new RoundedButton("x", 10);
+        RoundedButton Multiply = new RoundedButton("×", 10);
         RoundedButton Divide = new RoundedButton("÷", 10);
         RoundedButton Mod = new RoundedButton("%", 10);
         RoundedButton Square = new RoundedButton("x²", 10);
@@ -179,6 +179,16 @@ public class Calculator {
         frame.setVisible(true);
     }
 
+    private boolean pressedOperator = false;
+    private int num1;
+    private int num2;
+    private int answer;
+    private boolean adding;
+    private boolean subtracting;
+    private boolean multiplying;
+    private boolean dividing;
+    private boolean modding;
+
     private class ButtonHandler implements ActionListener {
         private Calculator calc;
 
@@ -194,6 +204,14 @@ public class Calculator {
             history.setText("");
         }
 
+        private void resetOperators() {
+            adding = false;
+            subtracting = false;
+            multiplying = false;
+            dividing = false;
+            modding = false;
+        }
+
         @Override
         public void actionPerformed(ActionEvent e) {
             String cmd = e.getActionCommand();
@@ -202,6 +220,10 @@ public class Calculator {
 
             switch (cmd) {
                 case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" -> {
+                    if (pressedOperator) {
+                        pressedOperator = false;
+                        clearText();
+                    }
                     if (text.getText().equals("0")) {
                         text.setText(cmd);
                     } else {
@@ -209,15 +231,70 @@ public class Calculator {
                     }
                 }
                 case "+" -> {
-                    
+                    resetOperators();
+                    String num1Str = text.getText();
+                    num1 = Integer.valueOf(num1Str);
+                    history.setText(" + " + num1Str);
+                    pressedOperator = true;
+                    adding = true;
                 }
-                // case "-":
-                // case "x":
-                // case "÷":
-                // case "%":
+                case "-" -> {
+                    resetOperators();
+                    String num1Str = text.getText();
+                    num1 = Integer.valueOf(num1Str);
+                    history.setText(" - " + num1Str);
+                    pressedOperator = true;
+                    subtracting = true;
+                }
+                case "×" -> {
+                    resetOperators();
+                    String num1Str = text.getText();
+                    num1 = Integer.valueOf(num1Str);
+                    history.setText(" × " + num1Str);
+                    pressedOperator = true;
+                    multiplying = true;
+                }
+                case "÷" -> {
+                    resetOperators();
+                    String num1Str = text.getText();
+                    num1 = Integer.valueOf(num1Str);
+                    history.setText(" ÷ " + num1Str);
+                    pressedOperator = true;
+                    dividing = true;
+                }
+                case "%" -> {
+                    resetOperators();
+                    String num1Str = text.getText();
+                    num1 = Integer.valueOf(num1Str);
+                    history.setText(" % " + num1Str);
+                    pressedOperator = true;
+                    modding = true;
+                }
                 // case "x²":
                 // case "√":
-                // case "=":
+                case "=" -> {
+                    String num2Str = text.getText();
+                    num2 = Integer.valueOf(num2Str);
+                    if (adding) {
+                        answer = num1 + num2;
+                        adding = false;
+                    } else if (subtracting) {
+                        answer = num1 - num2;
+                        subtracting = false;
+                    } else if (multiplying) {
+                        answer = num1 * num2;
+                        multiplying = false;
+                    } else if (dividing) {
+                        try {
+                            answer = num1 / num2;
+                        } catch (Exception problem) {
+                            text.setText("Cannot divide by Zero");
+                        }
+                        dividing = false;
+                    }
+                    text.setText(String.valueOf(answer));
+                    history.setText(" = " + num2Str + " " + history.getText());
+                }
                 // case ".":
                 case "C" -> {
                     text.setText("0");
@@ -229,11 +306,12 @@ public class Calculator {
                         clearText();
                     }
                     if ((!text.getText().equals("0"))) {
-                        text.setText(text.getText().substring(0, text.getText().length()- 1));    
+                        text.setText(text.getText().substring(0, text.getText().length() - 1));
                     }
-                }            
+                }
             }
         }
+
     }
 
     public static void main(String[] args) {
