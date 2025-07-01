@@ -188,6 +188,7 @@ public class Calculator {
     private boolean multiplying;
     private boolean dividing;
     private boolean modding;
+    private boolean squaring;
 
     private class ButtonHandler implements ActionListener {
         private Calculator calc;
@@ -210,6 +211,7 @@ public class Calculator {
             multiplying = false;
             dividing = false;
             modding = false;
+            squaring = false;
         }
 
         @Override
@@ -270,7 +272,21 @@ public class Calculator {
                     pressedOperator = true;
                     modding = true;
                 }
-                // case "x²":
+                case "x²" -> {
+                    String num1Str = text.getText();
+                    num1 = Integer.valueOf(num1Str);
+                    history.setText(String.format("sqr(%s)", num1Str));
+                    try {
+                        Math.multiplyExact(num1, num1);
+                    } catch (ArithmeticException omg) {
+                        text.setText("Lol");
+                        return;
+                    }
+                    answer = num1 * num1;
+                    text.setText(String.valueOf(answer));
+                    pressedOperator = true;
+                    modding = true;
+                }
                 // case "√":
                 case "=" -> {
                     String num2Str = text.getText();
@@ -291,6 +307,9 @@ public class Calculator {
                             text.setText("Cannot divide by Zero");
                         }
                         dividing = false;
+                    } else if (modding) {
+                        answer = num1 % num2;
+                        modding = false;
                     }
                     text.setText(String.valueOf(answer));
                     history.setText(" = " + num2Str + " " + history.getText());
