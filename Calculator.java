@@ -55,7 +55,7 @@ public class Calculator {
         text = new JTextArea();
         text.setBackground(new Color(34, 34, 34));
         text.setPreferredSize(new Dimension(300, 75));
-        // text.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        text.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         text.setText("0");
         text.setFocusable(false);
         text.setForeground(Color.WHITE);
@@ -65,7 +65,7 @@ public class Calculator {
         history = new JTextArea();
         history.setPreferredSize(new Dimension(300, 25));
         history.setFocusable(true);
-        // history.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        history.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         history.setMargin(new Insets(10, 0, 0, 10));
         history.setFont(new Font("Arial", 0, 15));
         history.setForeground(Color.lightGray);
