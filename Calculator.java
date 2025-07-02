@@ -436,16 +436,14 @@ public class Calculator {
                     }
                 }
                 case "DEL" -> {
-                    if (text.getText().length() == 1) {
+                    if (text.getText().length() == 1 || text.getText().equals("0")) {
                         clearText();
-                    }
-                    if ((!text.getText().equals("0"))) {
+                    } else {
                         text.setText(text.getText().substring(0, text.getText().length() - 1));
                     }
                 }
             }
         }
-
     }
 
     public static void main(String[] args) {
