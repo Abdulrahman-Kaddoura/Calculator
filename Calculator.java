@@ -230,16 +230,16 @@ public class Calculator {
 
         private void checkLength(Object x) {
             if (x instanceof Double y) {
-                String l = String.valueOf(Math.abs(y)); 
+                String l = String.valueOf(Math.abs(y));
                 if (l.length() <= 9) {
-                    //do nothing here. i could fix it but it works so ima leave the if as is
+                    // do nothing here. i could fix it but it works so ima leave the if as is
                 } else if (l.length() >= 14) {
                     changeFontSize(30);
                 }
             } else {
-                String l = String.valueOf(Math.abs((Integer) x)); 
+                String l = String.valueOf(Math.abs((Integer) x));
                 if (l.length() <= 9) {
-                    //do nothing here. i could fix it but it works so ima leave the if as is
+                    // do nothing here. i could fix it but it works so ima leave the if as is
                 } else if (l.length() >= 14) {
                     changeFontSize(30);
                 }
@@ -277,7 +277,7 @@ public class Calculator {
                 case "+" -> {
                     resetOperators();
                     String num1Str = text.getText();
-                    num1 = parseDisplayText(num1Str); 
+                    num1 = parseDisplayText(num1Str);
                     history.setText(" + " + num1Str);
                     pressedOperator = true;
                     adding = true;
@@ -285,7 +285,7 @@ public class Calculator {
                 case "-" -> {
                     resetOperators();
                     String num1Str = text.getText();
-                    num1 = parseDisplayText(num1Str); 
+                    num1 = parseDisplayText(num1Str);
                     history.setText(" - " + num1Str);
                     pressedOperator = true;
                     subtracting = true;
@@ -293,7 +293,7 @@ public class Calculator {
                 case "×" -> {
                     resetOperators();
                     String num1Str = text.getText();
-                    num1 = parseDisplayText(num1Str); 
+                    num1 = parseDisplayText(num1Str);
                     history.setText(" × " + num1Str);
                     pressedOperator = true;
                     multiplying = true;
@@ -301,7 +301,7 @@ public class Calculator {
                 case "÷" -> {
                     resetOperators();
                     String num1Str = text.getText();
-                    num1 = parseDisplayText(num1Str); 
+                    num1 = parseDisplayText(num1Str);
                     history.setText(" ÷ " + num1Str);
                     pressedOperator = true;
                     dividing = true;
@@ -309,14 +309,14 @@ public class Calculator {
                 case "%" -> {
                     resetOperators();
                     String num1Str = text.getText();
-                    num1 = parseDisplayText(num1Str); 
+                    num1 = parseDisplayText(num1Str);
                     history.setText(" % " + num1Str);
                     pressedOperator = true;
                     modding = true;
                 }
                 case "x²" -> {
                     String num1Str = text.getText();
-                    num1 = parseDisplayText(num1Str); 
+                    num1 = parseDisplayText(num1Str);
                     history.setText(String.format("sqr(%s)", num1Str));
                     try {
                         Math.pow(num1, 2);
@@ -335,7 +335,7 @@ public class Calculator {
                 }
                 case "√" -> {
                     String num1Str = text.getText();
-                    num1 = parseDisplayText(num1Str); 
+                    num1 = parseDisplayText(num1Str);
                     history.setText(String.format("root(%s)", num1Str));
                     try {
                         Math.sqrt(num1);
@@ -354,7 +354,7 @@ public class Calculator {
                 }
                 case "=" -> {
                     String num2Str = text.getText();
-                    num2 = parseDisplayText(num2Str); 
+                    num2 = parseDisplayText(num2Str);
                     if (adding) {
                         answerD = num1 + num2;
                         adding = false;
@@ -391,7 +391,37 @@ public class Calculator {
                     pressedOperator = false;
                 }
                 case "+/-" -> {
-                    
+                    if (text.getText().equals("0")) {
+                        return;
+                    }
+
+                    double currentNum = parseDisplayText(text.getText());
+                    currentNum = -currentNum;
+
+                    if (!checkDouble(currentNum)) {
+                        setAnswerInt(currentNum);
+                    } else {
+                        setAnswerDouble(currentNum);
+                    }
+
+                    if (pressedOperator) {
+                        num1 = currentNum;
+                        String historyText = history.getText();
+                        if (historyText.contains(" + ")) {
+                            history.setText(historyText.replace(" + ", " - "));
+                        } else if (historyText.contains(" - ")) {
+                            history.setText(historyText.replace(" - ", " + "));
+                        } else if (historyText.contains(" × ")) {
+                            String newDisplayValue = text.getText();
+                            history.setText(" × " + newDisplayValue);
+                        } else if (historyText.contains(" ÷ ")) {
+                            String newDisplayValue = text.getText();
+                            history.setText(" ÷ " + newDisplayValue);
+                        } else if (historyText.contains(" % ")) {
+                            String newDisplayValue = text.getText();
+                            history.setText(" % " + newDisplayValue);
+                        }
+                    }
                 }
                 case "DEL" -> {
                     if (text.getText().length() == 1) {
