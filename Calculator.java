@@ -136,8 +136,7 @@ public class Calculator {
         Del.addActionListener(new ButtonHandler(this));
 
         for (Component c : buttons.getComponents()) {
-            if (c instanceof RoundedButton) {
-                RoundedButton btn = (RoundedButton) c;
+            if (c instanceof RoundedButton btn) {
                 String hello = btn.getText();
                 if (hello.matches("\\d")) {
                     HelperMethods.colorButton(btn, Color.WHITE, new Color(59, 59, 59));
@@ -168,8 +167,6 @@ public class Calculator {
     private boolean multiplying;
     private boolean dividing;
     private boolean modding;
-    private boolean squaring;
-    private boolean rooting;
 
     private class ButtonHandler implements ActionListener {
         private final Calculator calc;
@@ -192,8 +189,6 @@ public class Calculator {
             multiplying = false;
             dividing = false;
             modding = false;
-            squaring = false;
-            rooting = false;
         }
 
         private boolean checkDouble(double x) {
@@ -350,7 +345,6 @@ public class Calculator {
                         setAnswerDouble(answerD);
                     }
                     pressedOperator = true;
-                    rooting = true;
                 }
                 case "=" -> {
                     String num2Str = text.getText();
@@ -383,7 +377,25 @@ public class Calculator {
                     }
                     history.setText(" = " + num2Str + " " + history.getText());
                 }
-                // case ".":
+                case "." -> {
+                    if (pressedOperator) {
+                        pressedOperator = false;
+                        text.setText("0.");
+                    }
+                    else if (text.getText().equals("0")) {
+                        text.setText("0.");
+                    }
+                    else if (text.getText().contains(".")) {
+                        return;
+                    }
+                    else if (text.getText().endsWith("-")) {
+                        String numberPart = text.getText().substring(0, text.getText().length() - 1);
+                        text.setText(numberPart + ".-");
+                    }
+                    else {
+                        text.setText(text.getText() + ".");
+                    }
+                }
                 case "C" -> {
                     text.setText("0");
                     clearHistory();
@@ -437,6 +449,7 @@ public class Calculator {
     }
 
     public static void main(String[] args) {
-        new Calculator();
+        @SuppressWarnings("unused")
+        Calculator calculator = new Calculator();
     }
 }
