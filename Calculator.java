@@ -252,6 +252,7 @@ public class Calculator {
         }
 
         @Override
+        @SuppressWarnings("UnnecessaryReturnStatement")
         public void actionPerformed(ActionEvent e) {
             String cmd = e.getActionCommand();
             JTextArea text = calc.text;
@@ -359,12 +360,11 @@ public class Calculator {
                         answerD = num1 * num2;
                         multiplying = false;
                     } else if (dividing) {
-                        try {
-                            answerD = num1 / num2;
-                        } catch (Exception problem) {
-                            text.setText("Cannot divide by Zero");
+                        if (num2 == 0) {
+                            dividing = false;
                             return;
                         }
+                        answerD = num1 / num2;
                         dividing = false;
                     } else if (modding) {
                         answerD = num1 % num2;
