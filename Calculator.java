@@ -7,26 +7,6 @@ public class Calculator {
     private final JTextArea text;
     private final JTextArea history;
 
-    public int add(int x, int y) {
-        return x + y;
-    }
-
-    public int subtract(int x, int y) {
-        return x - y;
-    }
-
-    public int multiply(int x, int y) {
-        return x * y;
-    }
-
-    public int divide(int x, int y) {
-        return x / y;
-    }
-
-    public int mod(int x, int y) {
-        return x % y;
-    }
-
     public Calculator() {
         JFrame frame = new JFrame("Calculator");
 
@@ -192,7 +172,7 @@ public class Calculator {
     private boolean rooting;
 
     private class ButtonHandler implements ActionListener {
-        private Calculator calc;
+        private final Calculator calc;
 
         public ButtonHandler(Calculator calc) {
             this.calc = calc;
@@ -224,29 +204,42 @@ public class Calculator {
             answerI = (int) x;
             checkLength(answerI);
             if (answerI < 0) {
+                text.setText(String.valueOf(-answerI) + "-");
+            } else {
                 text.setText(String.valueOf(answerI));
             }
         }
 
         private void setAnswerDouble(double x) {
             checkLength(x);
-            text.setText(String.valueOf(x));
+            if (x < 0) {
+                text.setText(String.valueOf(-x) + "-");
+            } else {
+                text.setText(String.valueOf(x));
+            }
+        }
+
+        private double parseDisplayText(String displayText) {
+            if (displayText.endsWith("-")) {
+                String numberPart = displayText.substring(0, displayText.length() - 1);
+                return -Double.parseDouble(numberPart);
+            } else {
+                return Double.parseDouble(displayText);
+            }
         }
 
         private void checkLength(Object x) {
-            if (x instanceof Double) {
-                String l = String.valueOf((Double) x);
+            if (x instanceof Double y) {
+                String l = String.valueOf(Math.abs(y)); 
                 if (l.length() <= 9) {
-                    return;
+                    //do nothing here. i could fix it but it works so ima leave the if as is
                 } else if (l.length() >= 14) {
-                    System.out.println("im here");
                     changeFontSize(30);
                 }
             } else {
-                System.out.println("Int");
-                String l = String.valueOf((Integer) x);
+                String l = String.valueOf(Math.abs((Integer) x)); 
                 if (l.length() <= 9) {
-                    return;
+                    //do nothing here. i could fix it but it works so ima leave the if as is
                 } else if (l.length() >= 14) {
                     changeFontSize(30);
                 }
@@ -284,7 +277,7 @@ public class Calculator {
                 case "+" -> {
                     resetOperators();
                     String num1Str = text.getText();
-                    num1 = Double.parseDouble(num1Str);
+                    num1 = parseDisplayText(num1Str); 
                     history.setText(" + " + num1Str);
                     pressedOperator = true;
                     adding = true;
@@ -292,7 +285,7 @@ public class Calculator {
                 case "-" -> {
                     resetOperators();
                     String num1Str = text.getText();
-                    num1 = Double.parseDouble(num1Str);
+                    num1 = parseDisplayText(num1Str); 
                     history.setText(" - " + num1Str);
                     pressedOperator = true;
                     subtracting = true;
@@ -300,7 +293,7 @@ public class Calculator {
                 case "×" -> {
                     resetOperators();
                     String num1Str = text.getText();
-                    num1 = Double.parseDouble(num1Str);
+                    num1 = parseDisplayText(num1Str); 
                     history.setText(" × " + num1Str);
                     pressedOperator = true;
                     multiplying = true;
@@ -308,7 +301,7 @@ public class Calculator {
                 case "÷" -> {
                     resetOperators();
                     String num1Str = text.getText();
-                    num1 = Double.parseDouble(num1Str);
+                    num1 = parseDisplayText(num1Str); 
                     history.setText(" ÷ " + num1Str);
                     pressedOperator = true;
                     dividing = true;
@@ -316,14 +309,14 @@ public class Calculator {
                 case "%" -> {
                     resetOperators();
                     String num1Str = text.getText();
-                    num1 = Double.parseDouble(num1Str);
+                    num1 = parseDisplayText(num1Str); 
                     history.setText(" % " + num1Str);
                     pressedOperator = true;
                     modding = true;
                 }
                 case "x²" -> {
                     String num1Str = text.getText();
-                    num1 = Double.parseDouble(num1Str);
+                    num1 = parseDisplayText(num1Str); 
                     history.setText(String.format("sqr(%s)", num1Str));
                     try {
                         Math.pow(num1, 2);
@@ -342,7 +335,7 @@ public class Calculator {
                 }
                 case "√" -> {
                     String num1Str = text.getText();
-                    num1 = Double.parseDouble(num1Str);
+                    num1 = parseDisplayText(num1Str); 
                     history.setText(String.format("root(%s)", num1Str));
                     try {
                         Math.sqrt(num1);
@@ -361,7 +354,7 @@ public class Calculator {
                 }
                 case "=" -> {
                     String num2Str = text.getText();
-                    num2 = Double.parseDouble(num2Str);
+                    num2 = parseDisplayText(num2Str); 
                     if (adding) {
                         answerD = num1 + num2;
                         adding = false;
@@ -373,12 +366,11 @@ public class Calculator {
                         multiplying = false;
                     } else if (dividing) {
                         try {
-                            double x = num1 / num2;
+                            answerD = num1 / num2;
                         } catch (Exception problem) {
                             text.setText("Cannot divide by Zero");
                             return;
                         }
-                        answerD = num1 / num2;
                         dividing = false;
                     } else if (modding) {
                         answerD = num1 % num2;
@@ -396,8 +388,11 @@ public class Calculator {
                     text.setText("0");
                     clearHistory();
                     resetFontSize();
+                    pressedOperator = false;
                 }
-                // case "+/-" -> {}
+                case "+/-" -> {
+                    
+                }
                 case "DEL" -> {
                     if (text.getText().length() == 1) {
                         clearText();
