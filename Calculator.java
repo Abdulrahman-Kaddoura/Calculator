@@ -21,11 +21,15 @@ public class Calculator {
         frame.setResizable(false);
 
         // frame.setUndecorated(true);
-
-        JPanel topCol = new JPanel();
+        
+        JPanel topCol = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         topCol.setPreferredSize(new Dimension(325, 50));
-        // topCol.setBackground(new Color(34, 34, 34));
-        topCol.setBackground(Color.white);
+        topCol.setBackground(new Color(34, 34, 34));
+        JButton bHistory = new JButton();
+        bHistory.setPreferredSize(new Dimension(30, 20));
+        HelperMethods.addHoverEffect(bHistory, new Color(34, 34, 34), new Color(96,96,96));
+        bHistory.setIcon(new ImageIcon("his.png"));
+        topCol.add(bHistory);
 
         JPanel textArea = new JPanel();
         textArea.setPreferredSize(new Dimension(325, 100));
