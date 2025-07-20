@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 
 public class History {
@@ -8,26 +7,38 @@ public class History {
 
     public History(ArrayList<String> x) {
         history = x;
+        count = x.size();
     }
 
     public void undo() {
-
+        if (count > 0) {
+            history.remove(count - 1);
+            count--;
+        }
     }
 
-    public void addToHistory() {
+    public void addToHistory(String entry) {
         if (count == max) {
-            removeFromHistory();
+            history.remove(0);
+            count--;
         }
+        history.add(entry);
         count++;
     }
 
     public void removeFromHistory() {
-        count--;
+        if (count > 0) {
+            history.remove(count - 1);
+            count--;
+        }
     }
 
     public void resetHistory() {
         history = new ArrayList<>();
+        count = 0;
     }
 
-    
+    public ArrayList<String> getHistory() {
+        return history;
+    }
 }
